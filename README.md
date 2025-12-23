@@ -2,6 +2,9 @@
 
 A lightweight static FlexLikes page with a minimal HTTP server so you can expose it publicly.
 
+Now includes a public follow counter stored via CountAPI, ready for GitHub Pages at
+`https://bujamin05.github.io/flexlikes/`.
+
 ## Run locally or in a container
 
 1. Install Node.js (v18+ recommended).
