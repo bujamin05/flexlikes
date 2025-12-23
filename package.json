@@ -1,0 +1,13 @@
+{
+  "name": "flexlikes",
+  "version": "1.0.0",
+  "description": "Static FlexLikes page served via a lightweight HTTP server.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["flexlikes", "static", "server"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
