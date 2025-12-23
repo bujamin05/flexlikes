@@ -1,0 +1,54 @@
+<svg width="640" height="640" viewBox="0 0 640 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#342148" />
+      <stop offset="35%" stop-color="#1a0f2b" />
+      <stop offset="100%" stop-color="#0a081c" />
+    </radialGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="120%">
+      <stop offset="0%" stop-color="#6df3ff" />
+      <stop offset="40%" stop-color="#6dd6ff" />
+      <stop offset="100%" stop-color="#ff69ff" />
+    </linearGradient>
+    <linearGradient id="textA" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9df1ff" />
+      <stop offset="50%" stop-color="#65d0ff" />
+      <stop offset="100%" stop-color="#65ffef" />
+    </linearGradient>
+    <linearGradient id="textB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9df8" />
+      <stop offset="50%" stop-color="#ff63e0" />
+      <stop offset="100%" stop-color="#ffb4ff" />
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="18" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0" />
+    </filter>
+    <filter id="inner" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur2" />
+      <feBlend in="SourceGraphic" in2="blur2" mode="screen" />
+    </filter>
+  </defs>
+  <rect width="640" height="640" fill="url(#bg)" />
+  <g filter="url(#shadow)">
+    <path d="M74 260c8-110 160-214 296-170 118 39 198 122 182 232-20 133-140 236-270 214C136 510 68 430 74 260Z" fill="#6e3dda" opacity="0.75" />
+    <path d="M130 360c0-72 88-146 170-156s156 30 186 106-4 170-120 196c-134 31-236-25-236-146Z" fill="#4bc1ff" opacity="0.65" />
+    <ellipse cx="190" cy="200" rx="96" ry="68" fill="#ff63e6" opacity="0.55" />
+    <ellipse cx="430" cy="200" rx="96" ry="68" fill="#1de3ff" opacity="0.45" />
+  </g>
+  <g filter="url(#inner)">
+    <text x="115" y="320" font-family="'Baloo 2', 'Inter', system-ui" font-size="160" font-weight="900" fill="url(#textA)" stroke="#0c0a1f" stroke-width="10" paint-order="stroke fill">Flex</text>
+    <text x="150" y="430" font-family="'Baloo 2', 'Inter', system-ui" font-size="170" font-weight="900" fill="url(#textB)" stroke="#0c0a1f" stroke-width="12" paint-order="stroke fill">Likes</text>
+  </g>
+  <g opacity="0.9">
+    <circle cx="150" cy="150" r="12" fill="#ffdf6f" />
+    <circle cx="510" cy="160" r="8" fill="#ff6ff0" />
+    <circle cx="520" cy="320" r="10" fill="#6fffd6" />
+    <circle cx="220" cy="500" r="9" fill="#ff79a3" />
+    <circle cx="360" cy="520" r="7" fill="#6ef0ff" />
+  </g>
+  <path d="M200 520c-10 35-26 60-50 60s-42-26-32-56c14-43 78-69 82-4Z" fill="#ff7ee2" opacity="0.5" />
+  <path d="M520 430c8 40-6 98-46 98s-52-42-24-82c20-28 74-40 70-16Z" fill="#6cf3ff" opacity="0.45" />
+  <path d="M550 260c16 14 30 42 12 60s-44 2-54-22c-10-20 16-54 42-38Z" fill="#ffde6f" opacity="0.5" />
+  <rect x="70" y="70" width="500" height="500" rx="80" stroke="url(#glow)" stroke-width="12" opacity="0.3" />
+</svg>

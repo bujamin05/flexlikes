@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlexLikes</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #050914;
+        --panel: #0f172a;
+        --text: #e2e8f0;
+        --accent: #8b5cf6;
+        --accent-strong: #7c3aed;
+        --muted: #94a3b8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.14), transparent 25%),
+          radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.1), transparent 20%),
+          var(--bg);
+        color: var(--text);
+        display: grid;
+        place-items: center;
+        padding: 2.5rem 1.25rem;
+        overflow: hidden;
+      }
+
+      canvas#bg { position: fixed; inset: 0; z-index: 0; filter: blur(0.2px) saturate(1.1); }
+
+      .app-shell {
+        width: min(960px, 100%);
+        display: grid;
+        gap: 1.5rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .card {
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 25px 100px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        border-radius: 22px;
+        padding: 1.9rem;
+        backdrop-filter: blur(16px) saturate(1.1);
+        transform: translateZ(0);
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .brand-logo {
+        width: min(140px, 24vw);
+        filter: drop-shadow(0 14px 40px rgba(0, 0, 0, 0.55));
+        border-radius: 22px;
+        background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 0.2), transparent 45%);
+        padding: 0.35rem;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(1.85rem, 1.1rem + 2vw, 2.6rem);
+      }
+
+      h2 {
+        font-size: 1.2rem;
+        color: var(--muted);
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      p {
+        margin: 0.35rem 0;
+        color: #cbd5e1;
+        line-height: 1.65;
+      }
+
+      .button {
+        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+        border: none;
+        color: #fff;
+        padding: 0.95rem 1.35rem;
+        font-weight: 800;
+        border-radius: 14px;
+        cursor: pointer;
+        transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+        box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        font-size: 1rem;
+        letter-spacing: 0.01em;
+      }
+
+      .button:disabled {
+        cursor: not-allowed;
+        opacity: 0.65;
+        box-shadow: none;
+      }
+
+      .button:not(:disabled):hover {
+        transform: translateY(-1px) scale(1.02);
+        box-shadow: 0 14px 48px rgba(124, 58, 237, 0.5);
+      }
+
+      .button.outline {
+        background: rgba(255, 255, 255, 0.05);
+        box-shadow: none;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .pill {
+        display: inline-flex;
+        padding: 0.35rem 0.7rem;
+        border-radius: 999px;
+        background: rgba(139, 92, 246, 0.16);
+        color: var(--text);
+        font-weight: 800;
+        font-size: 0.92rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .stats {
+        display: grid;
+        gap: 0.6rem;
+        margin-top: 1.25rem;
+      }
+
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.05rem;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        font-weight: 800;
+      }
+
+      .progress {
+        position: relative;
+        margin-top: 1rem;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+
+      .progress span {
+        position: absolute;
+        inset: 0;
+        width: var(--progress);
+        background: linear-gradient(90deg, var(--accent), #22c55e);
+        transition: width 180ms ease;
+      }
+
+      .likes-panel {
+        display: grid;
+        gap: 1rem;
+      }
+
+      label {
+        font-size: 0.95rem;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      input[type="url"] {
+        width: 100%;
+        padding: 0.95rem 1.05rem;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+        font-size: 1rem;
+      }
+
+      input[type="url"]:focus {
+        outline: 2px solid var(--accent);
+        border-color: transparent;
+        box-shadow: 0 0 0 6px rgba(124, 58, 237, 0.18);
+      }
+
+      .muted { color: var(--muted); }
+
+      .message {
+        padding: 0.85rem 1rem;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
+        color: #f1f5f9;
+        font-weight: 700;
+      }
+
+      .layout-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+      .product-shot {
+        width: min(360px, 46vw);
+        border-radius: 24px;
+        box-shadow: 0 30px 120px rgba(0, 0, 0, 0.5);
+        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.12), transparent 45%);
+        padding: 0.4rem;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.25rem;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bg"></canvas>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const COOLDOWN_MS = 5 * 60 * 1000;
+      const COUNTER_NAMESPACE = "flexlikes";
+      const COUNTER_KEY = "github-public-follow";
+      const COUNTER_BASE = "https://api.countapi.xyz";
+
+      const formatRemaining = (ms) => {
+        const totalSeconds = Math.ceil(ms / 1000);
+        const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+        const seconds = String(totalSeconds % 60).padStart(2, "0");
+        return `${minutes}:${seconds}`;
+      };
+
+      const useCooldown = () => {
+        const [lastRequest, setLastRequest] = React.useState(null);
+        const [now, setNow] = React.useState(Date.now());
+
+        React.useEffect(() => {
+          const id = setInterval(() => setNow(Date.now()), 1000);
+          return () => clearInterval(id);
+        }, []);
+
+        const remaining = lastRequest ? Math.max(0, COOLDOWN_MS - (now - lastRequest)) : 0;
+
+        return { remaining, mark: () => setLastRequest(Date.now()) };
+      };
+
+      const useRemoteCounter = () => {
+        const [count, setCount] = React.useState(null);
+        const [loading, setLoading] = React.useState(true);
+        const [error, setError] = React.useState("");
+
+        const fetchCount = React.useCallback(async () => {
+          setLoading(true);
+          setError("");
+          try {
+            const res = await fetch(`${COUNTER_BASE}/get/${COUNTER_NAMESPACE}/${COUNTER_KEY}`);
+            if (!res.ok) throw new Error("Counter nicht erreichbar");
+            const data = await res.json();
+            setCount(data.value ?? 0);
+          } catch (err) {
+            setError("Counter aktuell nicht erreichbar.");
+          } finally {
+            setLoading(false);
+          }
+        }, []);
+
+        const increment = React.useCallback(async () => {
+          try {
+            const res = await fetch(`${COUNTER_BASE}/hit/${COUNTER_NAMESPACE}/${COUNTER_KEY}`);
+            if (!res.ok) throw new Error("Hit fehlgeschlagen");
+            const data = await res.json();
+            setCount(data.value ?? 0);
+            return true;
+          } catch (err) {
+            setError("Konnte nicht speichern – bitte später erneut versuchen.");
+            return false;
+          }
+        }, []);
+
+        React.useEffect(() => {
+          fetchCount();
+        }, [fetchCount]);
+
+        return { count, loading, error, increment, refetch: fetchCount };
+      };
+
+      const BrandLogo = ({ className = "" }) => (
+        <img src="assets/flex-logo.svg" alt="FlexLikes Logo" className={`brand-logo ${className}`} loading="lazy" />
+      );
+
+      const ShareButton = () => {
+        const [status, setStatus] = React.useState("");
+
+        const handleShare = async () => {
+          const url = window.location.href;
+          const text = "Check FlexLikes – 25 TikTok Likes gratis alle 5 Minuten!";
+
+          try {
+            if (navigator.share) {
+              await navigator.share({ title: "FlexLikes", url, text });
+              setStatus("Danke fürs Teilen!");
+            } else if (navigator.clipboard) {
+              await navigator.clipboard.writeText(url);
+              setStatus("Link kopiert – teile ihn mit deinen Freunden!");
+            } else {
+              setStatus("Teilen nicht möglich – kopiere die URL manuell.");
+            }
+          } catch (err) {
+            setStatus("Ups, Teilen hat nicht geklappt.");
+          }
+        };
+
+        return (
+          <div className="layout-row" style={{ alignItems: "center" }}>
+            <button className="button outline" onClick={handleShare}>Link teilen</button>
+            {status && <span className="muted" style={{ fontWeight: 700 }}>{status}</span>}
+          </div>
+        );
+      };
+
+      const Intro = ({ count, loading, error, hasClicked, onFollow, onContinue }) => (
+        <section className="card">
+          <div className="header">
+            <BrandLogo />
+            <div>
+              <h1>FlexLikes Starter</h1>
+              <p className="muted">Trag Flex ein & drück auf Folgen, um loszulegen.</p>
+            </div>
+            <span className="pill">Public Counter</span>
+          </div>
+
+          <p>
+            Die Klicks landen direkt im öffentlichen FlexLikes Zähler auf GitHub Pages
+            (<strong>bujamin05.github.io/flexlikes</strong>), ganz ohne lokalen Speicher.
+          </p>
+
+          <div className="stats">
+            <div className="stat-row">
+              <span>Follow-Button Klicks</span>
+              <span>{loading ? "lädt…" : count ?? "-"}</span>
+            </div>
+            <div className="progress" style={{ "--progress": `${Math.min(100, count ?? 0)}%` }}>
+              <span />
+            </div>
+            {error && <div className="message">{error} – probier es gleich nochmal.</div>}
+          </div>
+
+          <div className="layout-row">
+            <button className="button" onClick={onFollow} disabled={hasClicked || loading}>
+              Flex bitte auf Folgen
+            </button>
+            {hasClicked && (
+              <span className="muted" style={{ fontWeight: 800 }}>Vielen Dank für dein Support!</span>
+            )}
+            {hasClicked && (
+              <button className="button outline" onClick={onContinue}>Free Likes öffnen</button>
+            )}
+          </div>
+
+          <div className="split" style={{ marginTop: "1rem" }}>
+            <ShareButton />
+            <img
+              src="assets/flex-product.svg"
+              alt="FlexLikes Produktbild"
+              className="product-shot"
+              loading="lazy"
+            />
+          </div>
+        </section>
+      );
+
+      const LikesPage = ({ onBack }) => {
+        const [link, setLink] = React.useState("");
+        const { remaining, mark } = useCooldown();
+        const [message, setMessage] = React.useState("");
+
+        const handleSubmit = () => {
+          if (!link.trim()) {
+            setMessage("Bitte gib einen gültigen TikTok-Video-Link ein.");
+            return;
+          }
+
+          if (remaining > 0) {
+            setMessage(`Bitte warte noch ${formatRemaining(remaining)} bis zum nächsten Gratis-Boost.`);
+            return;
+          }
+
+          mark();
+          setMessage("25 Likes werden jetzt vorbereitet! Du kannst in 5 Minuten erneut anfragen.");
+        };
+
+        return (
+          <section className="card likes-panel">
+            <div className="split">
+              <div className="likes-copy">
+                <div className="header">
+                  <BrandLogo />
+                  <div>
+                    <h1>FX</h1>
+                    <h2>FlexLikes</h2>
+                  </div>
+                </div>
+
+                <p style={{ fontWeight: 800 }}>Free TikTok Likes</p>
+                <p>Gib den Video-Link ein und hol dir alle 5 Minuten 25 Likes for free.</p>
+
+                <div>
+                  <label htmlFor="video-link">TikTok Video-Link</label>
+                  <input
+                    id="video-link"
+                    type="url"
+                    placeholder="https://www.tiktok.com/@user/video/123"
+                    value={link}
+                    onChange={(e) => setLink(e.target.value)}
+                  />
+                </div>
+
+                {remaining > 0 && (
+                  <div className="message">
+                    Nächster kostenloser Boost in {formatRemaining(remaining)}.
+                  </div>
+                )}
+
+                {message && <div className="message">{message}</div>}
+
+                <div className="layout-row">
+                  <button className="button" onClick={handleSubmit} disabled={remaining > 0}>
+                    25 Likes bekommen
+                  </button>
+                  <button className="button outline" onClick={onBack}>Zurück</button>
+                </div>
+              </div>
+
+              <img
+                src="assets/flex-product.svg"
+                alt="FlexLikes Free TikTok Likes"
+                className="product-shot"
+                loading="lazy"
+              />
+            </div>
+          </section>
+        );
+      };
+
+      const App = () => {
+        const [page, setPage] = React.useState("intro");
+        const { count, loading, error, increment } = useRemoteCounter();
+        const [hasFollowed, setHasFollowed] = React.useState(false);
+
+        const handleFollow = async () => {
+          if (hasFollowed || loading) return;
+          const ok = await increment();
+          if (ok) {
+            setHasFollowed(true);
+            setPage("likes");
+          }
+        };
+
+        const handleContinue = () => setPage("likes");
+
+        return (
+          <main className="app-shell">
+            {page === "intro" ? (
+              <Intro
+                count={count}
+                loading={loading}
+                error={error}
+                hasClicked={hasFollowed}
+                onFollow={handleFollow}
+                onContinue={handleContinue}
+              />
+            ) : (
+              <LikesPage onBack={() => setPage("intro")} />
+            )}
+          </main>
+        );
+      };
+
+      const canvas = document.getElementById("bg");
+      const ctx = canvas.getContext("2d");
+      let width, height;
+      const particles = Array.from({ length: 60 }, () => ({ x: 0, y: 0, vx: 0, vy: 0 }));
+
+      const resize = () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        particles.forEach((p) => {
+          p.x = Math.random() * width;
+          p.y = Math.random() * height;
+          p.vx = (Math.random() - 0.5) * 0.6;
+          p.vy = (Math.random() - 0.5) * 0.6;
+        });
+      };
+
+      const draw = () => {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "rgba(124, 58, 237, 0.6)";
+        particles.forEach((p) => {
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0 || p.x > width) p.vx *= -1;
+          if (p.y < 0 || p.y > height) p.vy *= -1;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2.4, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        ctx.strokeStyle = "rgba(148, 163, 184, 0.25)";
+        particles.forEach((a, i) => {
+          for (let j = i + 1; j < particles.length; j++) {
+            const b = particles[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150) {
+              ctx.globalAlpha = 1 - dist / 150;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+        });
+        ctx.globalAlpha = 1;
+
+        requestAnimationFrame(draw);
+      };
+
+      window.addEventListener("resize", resize);
+      resize();
+      draw();
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
