@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlexLikes</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0f172a;
+        --panel: #1e293b;
+        --text: #e2e8f0;
+        --accent: #8b5cf6;
+        --accent-strong: #7c3aed;
+        --muted: #94a3b8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.12), transparent 25%),
+          radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.1), transparent 20%),
+          var(--bg);
+        color: var(--text);
+        display: grid;
+        place-items: center;
+        padding: 2.5rem 1.25rem;
+      }
+
+      .app-shell {
+        width: min(960px, 100%);
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .card {
+        background: rgba(30, 41, 59, 0.72);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+        border-radius: 18px;
+        padding: 1.75rem;
+        backdrop-filter: blur(12px);
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        font-size: 1.1rem;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(1.75rem, 1.1rem + 2vw, 2.5rem);
+      }
+
+      h2 {
+        font-size: 1.2rem;
+        color: var(--muted);
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+
+      p {
+        margin: 0.35rem 0;
+        color: #cbd5e1;
+        line-height: 1.6;
+      }
+
+      .button {
+        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+        border: none;
+        color: #fff;
+        padding: 0.9rem 1.3rem;
+        font-weight: 700;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 120ms ease, box-shadow 120ms ease;
+        box-shadow: 0 10px 35px rgba(124, 58, 237, 0.35);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .button:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+        box-shadow: none;
+      }
+
+      .button:not(:disabled):hover {
+        transform: translateY(-1px) scale(1.01);
+        box-shadow: 0 12px 40px rgba(124, 58, 237, 0.45);
+      }
+
+      .pill {
+        display: inline-flex;
+        padding: 0.35rem 0.65rem;
+        border-radius: 999px;
+        background: rgba(139, 92, 246, 0.16);
+        color: var(--text);
+        font-weight: 700;
+        font-size: 0.92rem;
+        letter-spacing: 0.02em;
+      }
+
+      .stats {
+        display: grid;
+        gap: 0.5rem;
+        margin-top: 1.25rem;
+      }
+
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.9rem 1rem;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        font-weight: 700;
+      }
+
+      .progress {
+        position: relative;
+        margin-top: 1rem;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+      }
+
+      .progress span {
+        position: absolute;
+        inset: 0;
+        width: var(--progress);
+        background: linear-gradient(90deg, var(--accent), #22c55e);
+        transition: width 150ms ease;
+      }
+
+      .likes-panel {
+        display: grid;
+        gap: 1rem;
+      }
+
+      label {
+        font-size: 0.95rem;
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      input[type="url"] {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        font-size: 1rem;
+      }
+
+      input[type="url"]:focus {
+        outline: 2px solid var(--accent);
+        border-color: transparent;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .message {
+        padding: 0.75rem 0.9rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
+        color: #f1f5f9;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const COOLDOWN_MS = 5 * 60 * 1000;
+
+      const formatRemaining = (ms) => {
+        const totalSeconds = Math.ceil(ms / 1000);
+        const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+        const seconds = String(totalSeconds % 60).padStart(2, "0");
+        return `${minutes}:${seconds}`;
+      };
+
+      const usePersistentNumber = (key, fallback = 0) => {
+        const [value, setValue] = React.useState(() => {
+          const stored = localStorage.getItem(key);
+          return stored ? Number(stored) : fallback;
+        });
+
+        React.useEffect(() => {
+          localStorage.setItem(key, value);
+        }, [key, value]);
+
+        return [value, setValue];
+      };
+
+      const useCooldown = (key) => {
+        const [lastRequest, setLastRequest] = React.useState(() => {
+          const stored = localStorage.getItem(key);
+          return stored ? Number(stored) : null;
+        });
+
+        React.useEffect(() => {
+          if (lastRequest) {
+            localStorage.setItem(key, lastRequest);
+          } else {
+            localStorage.removeItem(key);
+          }
+        }, [key, lastRequest]);
+
+        const [now, setNow] = React.useState(Date.now());
+
+        React.useEffect(() => {
+          const id = setInterval(() => setNow(Date.now()), 1000);
+          return () => clearInterval(id);
+        }, []);
+
+        const remaining = lastRequest ? Math.max(0, COOLDOWN_MS - (now - lastRequest)) : 0;
+
+        return { remaining, mark: () => setLastRequest(Date.now()) };
+      };
+
+      const Intro = ({ count, onFollow }) => (
+        <section className="card">
+          <div className="header">
+            <div className="logo">FX</div>
+            <div>
+              <h1>FlexLikes Starter</h1>
+              <p className="muted">Trag Flex ein & drück auf Folgen, um loszulegen.</p>
+            </div>
+            <span className="pill">local save</span>
+          </div>
+
+          <p>
+            Wir speichern lokal, wie oft der Folgen-Button gedrückt wurde. So bleibt sichtbar,
+            wie viele Flex-Fans schon am Start sind.
+          </p>
+
+          <div className="stats">
+            <div className="stat-row">
+              <span>Follow-Button Klicks</span>
+              <span>{count}</span>
+            </div>
+            <div className="progress" style={{ "--progress": `${Math.min(100, count)}%` }}>
+              <span />
+            </div>
+          </div>
+
+          <button className="button" onClick={onFollow}>
+            Flex bitte auf Folgen
+          </button>
+        </section>
+      );
+
+      const LikesPage = ({ onBack }) => {
+        const [link, setLink] = React.useState("");
+        const { remaining, mark } = useCooldown("flexlikes:last-request");
+        const [message, setMessage] = React.useState("");
+
+        const handleSubmit = () => {
+          if (!link.trim()) {
+            setMessage("Bitte gib einen gültigen TikTok-Video-Link ein.");
+            return;
+          }
+
+          if (remaining > 0) {
+            setMessage(`Bitte warte noch ${formatRemaining(remaining)} bis zum nächsten Gratis-Boost.`);
+            return;
+          }
+
+          mark();
+          setMessage("25 Likes werden jetzt vorbereitet! Du kannst in 5 Minuten erneut anfragen.");
+        };
+
+        return (
+          <section className="card likes-panel">
+            <div className="header">
+              <div className="logo">FX</div>
+              <div>
+                <h1>FlexLikes</h1>
+                <h2>Free TikTok Likes</h2>
+              </div>
+            </div>
+
+            <p>Gib den Video-Link ein und hol dir alle 5 Minuten 25 Likes for free.</p>
+
+            <div>
+              <label htmlFor="video-link">TikTok Video-Link</label>
+              <input
+                id="video-link"
+                type="url"
+                placeholder="https://www.tiktok.com/@user/video/123"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+              />
+            </div>
+
+            {remaining > 0 && (
+              <div className="message">
+                Nächster kostenloser Boost in {formatRemaining(remaining)}.
+              </div>
+            )}
+
+            {message && <div className="message">{message}</div>}
+
+            <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+              <button className="button" onClick={handleSubmit} disabled={remaining > 0}>
+                25 Likes bekommen
+              </button>
+              <button className="button" style={{ background: "#1f2937", boxShadow: "none" }} onClick={onBack}>
+                Zurück
+              </button>
+            </div>
+          </section>
+        );
+      };
+
+      const App = () => {
+        const [page, setPage] = React.useState("intro");
+        const [followCount, setFollowCount] = usePersistentNumber("flexlikes:follows", 0);
+
+        const handleFollow = () => {
+          setFollowCount((count) => count + 1);
+          setPage("likes");
+        };
+
+        return (
+          <main className="app-shell">
+            {page === "intro" ? (
+              <Intro count={followCount} onFollow={handleFollow} />
+            ) : (
+              <LikesPage onBack={() => setPage("intro")} />
+            )}
+          </main>
+        );
+      };
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
