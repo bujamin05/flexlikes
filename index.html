@@ -59,23 +59,12 @@
         gap: 0.75rem;
       }
 
-      .logo {
-        width: 64px;
-        height: 64px;
-        border-radius: 18px;
-        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15), transparent 55%),
-          linear-gradient(145deg, #a855f7, #6ee7b7);
-        box-shadow: 0 16px 50px rgba(124, 58, 237, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.22);
-        display: grid;
-        place-items: center;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .logo svg {
-        width: 80%;
-        height: 80%;
-        filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
+      .brand-logo {
+        width: min(140px, 24vw);
+        filter: drop-shadow(0 14px 40px rgba(0, 0, 0, 0.55));
+        border-radius: 22px;
+        background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 0.2), transparent 45%);
+        padding: 0.35rem;
       }
 
       h1,
@@ -220,6 +209,21 @@
       }
 
       .layout-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+      .product-shot {
+        width: min(360px, 46vw);
+        border-radius: 24px;
+        box-shadow: 0 30px 120px rgba(0, 0, 0, 0.5);
+        background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.12), transparent 45%);
+        padding: 0.4rem;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.25rem;
+        align-items: center;
+      }
     </style>
   </head>
   <body>
@@ -297,34 +301,8 @@
         return { count, loading, error, increment, refetch: fetchCount };
       };
 
-      const DripLogo = () => (
-        <div className="logo" aria-label="FX Logo">
-          <svg viewBox="0 0 100 100" role="img" aria-hidden="true">
-            <defs>
-              <linearGradient id="dripGradient" x1="0%" y1="0%" x2="100%" y2="120%">
-                <stop offset="0%" stopColor="#f8fafc" />
-                <stop offset="40%" stopColor="#c084fc" />
-                <stop offset="100%" stopColor="#22d3ee" />
-              </linearGradient>
-            </defs>
-            <path
-              fill="url(#dripGradient)"
-              d="M18 26c8-10 24-14 36-12 13 2 24 12 26 26 2 12-4 25-13 33-7 6-17 11-27 8-12-3-24-16-22-31 1-9-10-16 0-24z"
-            />
-            <path
-              fill="#0f172a"
-              d="M54 28c-8 0-14 6-14 14 0 7 6 13 14 13 3 0 6-1 9-3l-5 13c-2 5-8 10-8 16 5-3 12-10 16-16l9-19-7-4-6 4c-2-3-5-6-8-6z"
-              opacity="0.85"
-            />
-            <circle cx="50" cy="12" r="6" fill="#0f172a" opacity="0.9" />
-            <circle cx="28" cy="16" r="5" fill="#0f172a" opacity="0.8" />
-            <path
-              fill="#0f172a"
-              d="M32 64c-6 0-10 6-7 12s11 3 11-3c0-3-2-9-4-9z"
-              opacity="0.7"
-            />
-          </svg>
-        </div>
+      const BrandLogo = ({ className = "" }) => (
+        <img src="assets/flex-logo.svg" alt="FlexLikes Logo" className={`brand-logo ${className}`} loading="lazy" />
       );
 
       const ShareButton = () => {
@@ -360,7 +338,7 @@
       const Intro = ({ count, loading, error, hasClicked, onFollow, onContinue }) => (
         <section className="card">
           <div className="header">
-            <DripLogo />
+            <BrandLogo />
             <div>
               <h1>FlexLikes Starter</h1>
               <p className="muted">Trag Flex ein & drück auf Folgen, um loszulegen.</p>
@@ -396,7 +374,15 @@
             )}
           </div>
 
-          <ShareButton />
+          <div className="split" style={{ marginTop: "1rem" }}>
+            <ShareButton />
+            <img
+              src="assets/flex-product.svg"
+              alt="FlexLikes Produktbild"
+              className="product-shot"
+              loading="lazy"
+            />
+          </div>
         </section>
       );
 
@@ -422,41 +408,52 @@
 
         return (
           <section className="card likes-panel">
-            <div className="header">
-              <DripLogo />
-              <div>
-                <h1>FX</h1>
-                <h2>FlexLikes</h2>
+            <div className="split">
+              <div className="likes-copy">
+                <div className="header">
+                  <BrandLogo />
+                  <div>
+                    <h1>FX</h1>
+                    <h2>FlexLikes</h2>
+                  </div>
+                </div>
+
+                <p style={{ fontWeight: 800 }}>Free TikTok Likes</p>
+                <p>Gib den Video-Link ein und hol dir alle 5 Minuten 25 Likes for free.</p>
+
+                <div>
+                  <label htmlFor="video-link">TikTok Video-Link</label>
+                  <input
+                    id="video-link"
+                    type="url"
+                    placeholder="https://www.tiktok.com/@user/video/123"
+                    value={link}
+                    onChange={(e) => setLink(e.target.value)}
+                  />
+                </div>
+
+                {remaining > 0 && (
+                  <div className="message">
+                    Nächster kostenloser Boost in {formatRemaining(remaining)}.
+                  </div>
+                )}
+
+                {message && <div className="message">{message}</div>}
+
+                <div className="layout-row">
+                  <button className="button" onClick={handleSubmit} disabled={remaining > 0}>
+                    25 Likes bekommen
+                  </button>
+                  <button className="button outline" onClick={onBack}>Zurück</button>
+                </div>
               </div>
-            </div>
 
-            <p style={{ fontWeight: 800 }}>Free TikTok Likes</p>
-            <p>Gib den Video-Link ein und hol dir alle 5 Minuten 25 Likes for free.</p>
-
-            <div>
-              <label htmlFor="video-link">TikTok Video-Link</label>
-              <input
-                id="video-link"
-                type="url"
-                placeholder="https://www.tiktok.com/@user/video/123"
-                value={link}
-                onChange={(e) => setLink(e.target.value)}
+              <img
+                src="assets/flex-product.svg"
+                alt="FlexLikes Free TikTok Likes"
+                className="product-shot"
+                loading="lazy"
               />
-            </div>
-
-            {remaining > 0 && (
-              <div className="message">
-                Nächster kostenloser Boost in {formatRemaining(remaining)}.
-              </div>
-            )}
-
-            {message && <div className="message">{message}</div>}
-
-            <div className="layout-row">
-              <button className="button" onClick={handleSubmit} disabled={remaining > 0}>
-                25 Likes bekommen
-              </button>
-              <button className="button outline" onClick={onBack}>Zurück</button>
             </div>
           </section>
         );

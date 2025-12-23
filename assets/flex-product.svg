@@ -1,0 +1,74 @@
+<svg width="720" height="1200" viewBox="0 0 720 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="space" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#2a0c39" />
+      <stop offset="40%" stop-color="#140420" />
+      <stop offset="100%" stop-color="#070314" />
+    </radialGradient>
+    <linearGradient id="titleA" x1="0%" y1="0%" x2="100%" y2="120%">
+      <stop offset="0%" stop-color="#9af0ff" />
+      <stop offset="45%" stop-color="#6dd6ff" />
+      <stop offset="100%" stop-color="#6bffef" />
+    </linearGradient>
+    <linearGradient id="titleB" x1="0%" y1="0%" x2="120%" y2="100%">
+      <stop offset="0%" stop-color="#ff9df8" />
+      <stop offset="50%" stop-color="#ff63e0" />
+      <stop offset="100%" stop-color="#ffb4ff" />
+    </linearGradient>
+    <linearGradient id="phone" x1="0%" y1="0%" x2="120%" y2="120%">
+      <stop offset="0%" stop-color="#0c0f24" />
+      <stop offset="60%" stop-color="#191f3c" />
+      <stop offset="100%" stop-color="#0a0d1e" />
+    </linearGradient>
+    <linearGradient id="btn" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9c5cff" />
+      <stop offset="100%" stop-color="#ff66dd" />
+    </linearGradient>
+    <filter id="blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="24" />
+    </filter>
+  </defs>
+  <rect width="720" height="1200" fill="url(#space)" />
+  <g filter="url(#blur)" opacity="0.45">
+    <circle cx="180" cy="220" r="120" fill="#ff5ef0" />
+    <circle cx="480" cy="140" r="140" fill="#4fd8ff" />
+    <circle cx="420" cy="420" r="180" fill="#7a53ff" />
+    <circle cx="260" cy="760" r="210" fill="#ff2fb5" />
+    <circle cx="520" cy="820" r="230" fill="#3ee3ff" />
+  </g>
+  <g text-anchor="middle" font-family="'Baloo 2','Inter',system-ui" font-weight="900" stroke="#0d0a1f" stroke-width="12" paint-order="stroke fill">
+    <text x="360" y="210" font-size="150" fill="url(#titleA)">Flex</text>
+    <text x="360" y="330" font-size="160" fill="url(#titleB)">Likes</text>
+  </g>
+  <g text-anchor="middle" font-family="'Inter',system-ui" fill="#f5f6ff">
+    <text x="360" y="420" font-size="70" font-weight="800">TIKTOK LIKES</text>
+    <text x="360" y="480" font-size="32" fill="#c8d5ff">Get free likes for your TikTok videos!</text>
+  </g>
+  <g transform="translate(170 540)">
+    <path d="M270 40c-40-24-124-22-170 0-68 32-124 100-96 160s94 84 176 96c98 14 210-4 240-80s-10-140-80-176z" fill="#f148ff" opacity="0.25" filter="url(#blur)" />
+    <path d="M138 70c-30 0-54 24-54 54v280c0 30 24 54 54 54h168c30 0 54-24 54-54V124c0-30-24-54-54-54H138z" fill="url(#phone)" stroke="#5fe3ff" stroke-width="6" />
+    <rect x="158" y="118" width="128" height="212" rx="18" fill="#0d101f" stroke="#ff9af0" stroke-width="4" />
+    <g transform="translate(184 168)">
+      <path d="M58 0c-6 0-11 5-11 11 0 6 5 11 11 11h16v54c0 6 5 11 11 11s11-5 11-11V22c0-12-10-22-22-22H58z" fill="#fff" />
+      <circle cx="38" cy="22" r="11" fill="#25f4ee" />
+      <circle cx="90" cy="22" r="11" fill="#fe2c55" />
+      <circle cx="64" cy="22" r="11" fill="#fff" />
+    </g>
+  </g>
+  <g transform="translate(160 900)" text-anchor="middle" font-family="'Inter',system-ui">
+    <rect x="50" y="0" width="300" height="96" rx="24" fill="url(#btn)" stroke="#fff" stroke-opacity="0.6" stroke-width="2" />
+    <text x="200" y="60" font-size="36" font-weight="800" fill="#fff">Free Likes</text>
+    <g transform="translate(-10 120)">
+      <circle cx="80" cy="24" r="24" fill="#ff66c4" />
+      <text x="80" y="32" font-size="26" font-weight="800" fill="#fff">♪</text>
+    </g>
+    <g transform="translate(120 120)">
+      <circle cx="80" cy="24" r="24" fill="#7bffb5" />
+      <text x="80" y="32" font-size="26" font-weight="800" fill="#0a1030">❤</text>
+    </g>
+    <g transform="translate(250 120)">
+      <circle cx="80" cy="24" r="24" fill="#4de0ff" />
+      <text x="80" y="32" font-size="26" font-weight="800" fill="#0a1030">★</text>
+    </g>
+  </g>
+</svg>
